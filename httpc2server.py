@@ -117,8 +117,16 @@ note : available payload types are : py (python) , ps (powershell) , sh (bash)
             srv_port = sys.argv[2]
             payload_type = sys.argv[3]
             self.payload_creator(srv_host,srv_port,payload_type)
-            input(f"{W}[!] - click Enter button to start the server.{Res}")
+            listener = input(f"{W}[!] - Start listener on (default : {srv_host}:{srv_port}) : {Res}")
             system('clear')
+            if not listener:
+                self.server(srv_host,srv_port)
+            try:
+                srv_host = listener.split(":")[0]
+                srv_port = listener.split(":")[1]
+            except Exception:
+                print(f"{R}[!] - invalid IP:PORT !")
+                exit()
             self.server(srv_host,srv_port)
         except IndexError as ie:
             self.usage()
